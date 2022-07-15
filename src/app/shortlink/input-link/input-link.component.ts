@@ -1,4 +1,6 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { LongUrlRequest } from '../model/LongUrlRequest';
+import { ShortlinkService } from '../service/shortlink.service';
 
 @Component({
   selector: 'app-input-link',
@@ -9,18 +11,25 @@ export class InputLinkComponent implements OnInit {
   link: string = '';
   urlGetLink = '';
   err = '';
-  constructor() { }
+  constructor(
+    private shortlinkService: ShortlinkService
+  ) { }
 
   ngOnInit(): void {
   }
-  getLink(): void {
-    if (this.link === ''){
+  getLink() {
+    if (this.link === '') {
       this.err = 'Không được để trống';
       return;
-    }if (this.link !== ''){
+    } if (this.link !== '') {
       this.err = '';
-      this.urlGetLink = this.link;
-      return;
+      const request: LongUrlRequest = {
+        longUrl: this.link
+      }
+      this.shortlinkService.doCheckLink(request).subscribe(res => {
+        console.log(res);
+
+      })
     }
   }
 }
